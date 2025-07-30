@@ -96,10 +96,13 @@ export const listingService = {
       );
       const querySnapshot = await getDocs(q);
       
-      return querySnapshot.docs.map(doc => ({
+      // Filter out sold listings - only return active listings for "My Listings"
+      const allListings = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      
+      return allListings.filter(listing => !listing.sold);
     } catch (error) {
       console.error('Error fetching user listings:', error);
       throw error;

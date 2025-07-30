@@ -5,7 +5,8 @@ import {
   arrayUnion,
   arrayRemove
 } from 'firebase/firestore';
-import { db } from '../../firebase.config';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { db, storage } from '../../firebase.config';
 
 export const userService = {
   async addToFavorites(userId, listingId) {
@@ -68,6 +69,46 @@ export const userService = {
       return [];
     } catch (error) {
       console.error('Error fetching user favorites:', error);
+      throw error;
+    }
+  },
+
+  async uploadProfilePhoto(userId, imageUri) {
+    try {
+      // Create a unique filename for the profile photo
+      const filename = `profile_${userId}_${Date.now()}.jpg`;
+      const storageRef = ref(storage, `profile-photos/${filename}`);
+      
+      // Convert image URI to blob
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+      
+      // Upload the image
+      await uploadBytes(storageRef, blob);
+      
+      // Get the download URL
+      const downloadURL = await getDownloadURL(storageRef);
+      
+      // Get current user profile to check for existing photo
+      const userProfile = await this.getUserProfile(userId);
+      
+      // Delete old profile photo if it exists
+      if (userProfile?.photoURL) {
+        try {
+          // Extract filename from old URL to delete it
+          const oldPhotoRef = ref(storage, userProfile.photoURL);
+          await deleteObject(oldPhotoRef);
+        } catch (deleteError) {
+          console.log('Old profile photo already deleted or doesn\'t exist');
+        }
+      }
+      
+      // Update user profile with new photo URL
+      await this.updateUserProfile(userId, { photoURL: downloadURL });
+      
+      return downloadURL;
+    } catch (error) {
+      console.error('Error uploading profile photo:', error);
       throw error;
     }
   }

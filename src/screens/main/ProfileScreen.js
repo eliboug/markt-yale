@@ -10,6 +10,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import { useFocusEffect } from '@react-navigation/native';
 import { userService } from '../../services/userService';
 import { listingService } from '../../services/listingService';
 import { useAuth } from '../../utils/AuthContext';
@@ -23,10 +25,20 @@ const ProfileScreen = ({ navigation }) => {
     soldItems: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   useEffect(() => {
     loadUserData();
   }, []);
+
+  // Auto-refresh data whenever the screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!loading) {
+        loadUserData();
+      }
+    }, [loading])
+  );
 
   const loadUserData = async () => {
     try {
@@ -50,9 +62,87 @@ const ProfileScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.error('Error loading user data:', error);
-      Alert.alert('Error', 'Failed to load profile data');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePhotoUpload = () => {
+    Alert.alert(
+      'Update Profile Photo',
+      'Choose how you want to update your profile photo',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Camera', onPress: () => openCamera() },
+        { text: 'Photo Library', onPress: () => openImagePicker() },
+      ]
+    );
+  };
+
+  const openCamera = async () => {
+    try {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Required', 'Camera permission is required to take photos.');
+        return;
+      }
+
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: 'Images',
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        await uploadProfilePhoto(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error opening camera:', error);
+      Alert.alert('Error', 'Failed to open camera. Please try again.');
+    }
+  };
+
+  const openImagePicker = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Required', 'Photo library permission is required to select photos.');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: 'Images',
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        await uploadProfilePhoto(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error opening image picker:', error);
+      Alert.alert('Error', 'Failed to open photo library. Please try again.');
+    }
+  };
+
+  const uploadProfilePhoto = async (imageUri) => {
+    try {
+      setUploadingPhoto(true);
+      
+      // Upload the photo and update user profile
+      const photoURL = await userService.uploadProfilePhoto(user.uid, imageUri);
+      
+      // Update local state
+      setUserProfile(prev => ({ ...prev, photoURL }));
+      
+      Alert.alert('Success', 'Profile photo updated successfully!');
+    } catch (error) {
+      console.error('Error uploading profile photo:', error);
+      Alert.alert('Error', 'Failed to update profile photo. Please try again.');
+    } finally {
+      setUploadingPhoto(false);
     }
   };
 
@@ -160,16 +250,34 @@ const ProfileScreen = ({ navigation }) => {
       {/* Profile Info */}
       <View style={styles.profileSection}>
         <View style={styles.profileInfo}>
-          {userProfile?.photoURL ? (
-            <Image
-              source={{ uri: userProfile.photoURL }}
-              style={styles.profileImage}
-            />
-          ) : (
-            <View style={[styles.profileImage, styles.profileImagePlaceholder]}>
-              <Ionicons name="person" size={32} color="#8e8e93" />
+          <TouchableOpacity 
+            style={styles.profileImageContainer}
+            onPress={handlePhotoUpload}
+            disabled={uploadingPhoto}
+          >
+            {userProfile?.photoURL ? (
+              <Image
+                source={{ uri: userProfile.photoURL }}
+                style={styles.profileImage}
+              />
+            ) : (
+              <View style={[styles.profileImage, styles.profileImagePlaceholder]}>
+                <Ionicons name="person" size={32} color="#8e8e93" />
+              </View>
+            )}
+            
+            {/* Upload indicator */}
+            {uploadingPhoto && (
+              <View style={styles.uploadOverlay}>
+                <ActivityIndicator size="small" color="#ffffff" />
+              </View>
+            )}
+            
+            {/* Camera icon overlay */}
+            <View style={styles.cameraIconOverlay}>
+              <Ionicons name="camera" size={16} color="#ffffff" />
             </View>
-          )}
+          </TouchableOpacity>
           
           <View style={styles.profileText}>
             <Text style={styles.profileName}>{userProfile?.name || 'Unknown User'}</Text>
@@ -288,16 +396,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
+  profileImageContainer: {
+    position: 'relative',
+    marginRight: 16,
+  },
   profileImage: {
     width: 64,
     height: 64,
     borderRadius: 32,
-    marginRight: 16,
   },
   profileImagePlaceholder: {
     backgroundColor: '#f7fafc',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  uploadOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cameraIconOverlay: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    backgroundColor: '#4285f4',
+    borderRadius: 12,
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#ffffff',
   },
   profileText: {
     flex: 1,

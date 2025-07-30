@@ -111,7 +111,7 @@ const SoldListingsScreen = ({ navigation }) => {
             Posted {formatDate(item.timestamp)}
             {item.soldAt && (
               <Text style={styles.soldDate}>
-                {' • Sold {formatDate(item.soldAt)}'}
+                {' • Sold ' + formatDate(item.soldAt)}
               </Text>
             )}
           </Text>
