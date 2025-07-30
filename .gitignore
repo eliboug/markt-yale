@@ -208,3 +208,4 @@ test-results/
 
 # typescript
 *.tsbuildinfo
+APP_STORE_DEPLOYMENT_GUIDE.md

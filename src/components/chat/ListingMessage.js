@@ -9,11 +9,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 const ListingMessage = ({ listing, onPress, isMyMessage }) => {
-  // Debug: Log the listing data
-  console.log('ListingMessage rendering:', { listing, isMyMessage });
-  
   if (!listing) {
-    console.log('No listing data provided');
     return null;
   }
 
