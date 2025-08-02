@@ -1,0 +1,211 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+.env
+.env.production
+.env.development
+
+# Firebase secrets and configuration
+firebase.config.js
+.firebaserc
+firebase-debug.log
+
+# API keys and secrets
+api-keys.json
+secrets.json
+config/secrets.js
+
+# Security-sensitive files and credentials
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+*.keystore
+*.jks
+*.asc
+*.gpg
+*.ssh
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+.ssh/
+
+# Authentication and session files
+.netrc
+.htpasswd
+.htaccess
+auth.json
+auth.js
+auth.ts
+credentials.json
+credentials.js
+credentials.ts
+tokens.json
+tokens.js
+tokens.ts
+session.json
+session.js
+session.ts
+
+# Database and connection strings
+*.db
+*.sqlite
+*.sqlite3
+database.json
+db.json
+connection.json
+connection.js
+connection.ts
+
+# Logs and debug files (can contain sensitive info)
+*.log
+logs/
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.npm
+.eslintcache
+.nyc_output
+coverage/
+*.lcov
+.coverage/
+
+# Backup and temporary files (can contain sensitive data)
+*.bak
+*.backup
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.#*
+#*#
+*.orig
+*.rej
+
+# IDE and editor files (can contain project paths/secrets)
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+
+# OS-specific files (can leak system info)
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Package manager files with potential secrets
+.npmrc
+.yarnrc
+.yarnrc.yml
+.yarn/
+yarn.lock
+package-lock.json
+shrinkwrap.yaml
+
+# Build artifacts and deployment files
+build/
+dist/
+out/
+target/
+*.war
+*.jar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Configuration files that might contain secrets
+config.json
+config.js
+config.ts
+config.local.*
+config.prod.*
+config.production.*
+config.staging.*
+config.dev.*
+config.development.*
+settings.json
+settings.js
+settings.ts
+
+# Docker and container files (can contain secrets)
+Dockerfile.local
+docker-compose.override.yml
+docker-compose.local.yml
+docker-compose.prod.yml
+docker-compose.production.yml
+.dockerignore
+
+# Cloud provider credentials and configs
+.aws/
+.azure/
+.gcloud/
+.terraform/
+terraform.tfstate*
+terraform.tfvars*
+*.tfvars
+
+# Mobile app signing and certificates
+*.mobileprovision
+*.p8
+*.p12
+*.jks
+*.keystore
+google-services.json
+GoogleService-Info.plist
+
+# Test files that might contain sensitive data
+test-results/
+*.test.local.*
+*.spec.local.*
+
+# typescript
+*.tsbuildinfo
+APP_STORE_DEPLOYMENT_GUIDE.md

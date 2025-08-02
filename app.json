@@ -1,0 +1,70 @@
+{
+  "expo": {
+    "name": "Markt",
+    "slug": "markt",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "scheme": "markt",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "edu.yale.markt",
+      "buildNumber": "1",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "background-fetch",
+          "remote-notification",
+          "background-fetch",
+          "remote-notification"
+        ],
+        "NSCameraUsageDescription": "This app uses the camera to take photos for listings.",
+        "NSPhotoLibraryUsageDescription": "This app accesses your photo library to select images for listings.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "edu.yale.markt",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.NOTIFICATIONS",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your listings.",
+          "cameraPermission": "The app accesses your camera to let you take photos for your listings."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4a941c3b-8b73-4c29-a490-8e4b6b05459a"
+      }
+    },
+    "owner": "eliboug"
+  }
+}
