@@ -205,7 +205,7 @@ const ProfileScreen = ({ navigation }) => {
       onPress: () => {
         Alert.alert(
           'Help & Support',
-          'For support, please contact the Yale ITS Help Desk or report issues through the official channels.',
+          'For support, please contact Eli Bouganim.',
           [{ text: 'OK' }]
         );
       },
